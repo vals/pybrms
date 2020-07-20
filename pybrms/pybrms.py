@@ -43,6 +43,7 @@ def _convert_python_to_R(data: typing.Union[dict, pd.DataFrame]):
         else:
             raise ValueError("Data should be either a pandas dataframe or a dictionary")
 
+
 #Cell
 def get_stan_code(
     formula: str,
@@ -51,6 +52,9 @@ def get_stan_code(
     family: str,
     sample_prior: str="no"
 ):
+    formula = brms.bf(formula)
+    data = _convert_python_to_R(data)
+
     if len(priors)>0:
         return brms.make_stancode(
             formula=formula, data=data, prior=priors, family=family, sample_prior=sample_prior
@@ -59,6 +63,7 @@ def get_stan_code(
         return brms.make_stancode(
             formula=formula, data=data, family=family, sample_prior=sample_prior
         )[0]
+
 
 #Cell
 def _convert_R_to_python(
